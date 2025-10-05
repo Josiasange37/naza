@@ -195,7 +195,7 @@
 
       try {
         // Generate video
-        const response = await fetch("http://54.166.182.107:5000/generate-video", {
+        const response = await fetch("https://darkmind.fin-tech.com/generate-video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lat, lon, years })
@@ -235,7 +235,7 @@
           Vent: ${data.wind.speed} m/s
         `;
         weatherEl.style.display = 'block';
-        setTimeout(() => weatherEl.style.opacity = 1, 50); // fade inio
+        setTimeout(() => weatherEl.style.opacity = 1, 50); // fade in
 
       } catch (err) {
         console.error("Erreur météo:", err);
