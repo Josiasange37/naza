@@ -3,24 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>World Map Selector</title>
+  <title>Get Forest Pulse 🌍 - Tracking Deforestation & Fire Dynamics</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
     :root {
       --primary: #00bfff;
-      --accent:  #1e90ff;
-      --dark:    #0a0f1a;
-      --light:   #e5f6ff;
-      --glass:   rgba(255,255,255,0.05);
+      --secondary: #ff6b35;
+      --accent: #1e90ff;
+      --danger: #ff4757;
+      --success: #2ed573;
+      --warning: #ffa502;
+      --dark: #0a0f1a;
+      --darker: #050810;
+      --light: #e5f6ff;
+      --glass: rgba(255,255,255,0.05);
+      --glass-strong: rgba(255,255,255,0.1);
       --transition: all 0.3s ease-in-out;
+      --glow: 0 0 20px rgba(0, 191, 255, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, var(--dark), var(--accent));
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a1f3a 100%);
       color: var(--light);
       min-height: 100vh;
       display: flex;
@@ -28,78 +48,227 @@
       align-items: center;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    h1 { 
-      margin-top: 2rem;
-      background: linear-gradient(to right, var(--primary), var(--accent));
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.1), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(0, 191, 255, 0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 107, 53, 0.1), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.05), transparent);
+      background-repeat: repeat;
+      background-size: 150px 100px;
+      animation: particleFloat 20s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0px) translateX(0px); }
+      33% { transform: translateY(-10px) translateX(5px); }
+      66% { transform: translateY(5px) translateX(-5px); }
+      100% { transform: translateY(0px) translateX(0px); }
+    }
+
+    /* Header with enhanced animations */
+    .header-container {
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .main-title {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 3.5rem);
+      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+      background-size: 300% 300%;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
       text-align: center;
-      transition: transform 0.5s ease;
+      margin-bottom: 0.5rem;
+      animation: gradientShift 4s ease-in-out infinite, titlePulse 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
     }
 
-    h1:hover {
-      transform: scale(1.05) rotate(-1deg);
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+      animation: fadeInUp 1s ease-out 0.5s both;
+    }
+
+    .status-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--glass);
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 1s ease-out both;
+    }
+
+    .status-item:nth-child(1) { animation-delay: 0.7s; }
+    .status-item:nth-child(2) { animation-delay: 0.9s; }
+    .status-item:nth-child(3) { animation-delay: 1.1s; }
+
+    .status-icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .status-icon.active { background: var(--success); }
+    .status-icon.warning { background: var(--warning); }
+    .status-icon.danger { background: var(--danger); }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes titlePulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.02); }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
+    }
+    /* Map container with enhanced styling */
+    .map-container {
+      position: relative;
+      width: 90%;
+      max-width: 1000px;
+      margin: 2rem auto;
+      animation: fadeInUp 1s ease-out 1.3s both;
     }
 
     #map {
-      width: 90%;
-      max-width: 1000px;
+      width: 100%;
       height: 500px;
-      margin: 2rem auto;
-      border-radius: 15px;
-      border: 2px solid rgba(255,255,255,0.2);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
-    }
-
-    #map:hover {
-      transform: scale(1.01);
-    }
-
-    .btn-send {
-      display: block;
-      margin: 1rem auto 2rem;
-      background: var(--primary);
-      color: var(--dark);
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
+      border-radius: 20px;
+      border: 2px solid rgba(0, 191, 255, 0.3);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
       transition: var(--transition);
     }
 
-    .btn-send:hover {
-      background: var(--accent);
-      transform: translateY(-2px) scale(1.05);
+    #map:hover {
+      border-color: var(--primary);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 1px var(--primary),
+        0 0 30px rgba(0, 191, 255, 0.2);
+      transform: translateY(-2px);
     }
 
-    #video, #weather {
-      display: none;
+    .map-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+      border-radius: 22px;
+      z-index: -1;
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      transition: opacity 0.3s ease;
     }
 
-    #video {
-      margin: 1rem auto;
-      border-radius: 10px;
-      border: 2px solid rgba(255,255,255,0.2);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    .map-container:hover::before {
+      opacity: 0.3;
     }
 
-    #weather {
-      width: 90%;
-      max-width: 500px;
-      margin: 1rem auto 3rem;
-      padding: 1rem 1.5rem;
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      text-align: center;
-      font-size: 1rem;
-      line-height: 1.4;
-      color: var(--light);
+    /* Enhanced button styling */
+    .btn-send {
+      display: block;
+      margin: 2rem auto 3rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: var(--dark);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 
+        0 4px 15px rgba(0, 191, 255, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      animation: fadeInUp 1s ease-out 1.5s both;
+    }
+
+    .btn-send::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-send:hover::before {
+      left: 100%;
+    }
+
+    .btn-send:hover {
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        0 8px 25px rgba(0, 191, 255, 0.4),
+        0 0 0 1px var(--primary),
+        0 0 20px rgba(0, 191, 255, 0.3);
+    }
+
+    .btn-send:active {
+      transform: translateY(-1px) scale(1.02);
     }
 
     #loader {
@@ -118,13 +287,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    footer {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.6);
-    }
-
     .leaflet-marker-icon.bounce {
       animation: bounce 0.5s;
     }
@@ -134,19 +296,1217 @@
       50% { transform: translateY(-15px); }
       100% { transform: translateY(0); }
     }
+
+    /* Data visualization panels */
+    .data-panels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 90%;
+      max-width: 1000px;
+      margin: 2rem auto;
+      animation: fadeInUp 1s ease-out 1.7s both;
+    }
+
+    .data-panel {
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(15px);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .data-panel:hover::before {
+      transform: scaleX(1);
+    }
+
+    .data-panel:hover {
+      background: var(--glass-strong);
+      border-color: rgba(0, 191, 255, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .panel-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--light);
+    }
+
+    .panel-description {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    /* Footer enhancement */
+    footer {
+      text-align: center;
+      margin: 3rem 0 2rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      animation: fadeInUp 1s ease-out 1.9s both;
+      position: relative;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .leaflet-container {
+      border-radius: 20px;
+    }
+
+    /* Custom styling for Leaflet zoom controls */
+    .leaflet-control-zoom {
+      border: none !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .leaflet-control-zoom a {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(0, 191, 255, 0.3) !important;
+      color: var(--light) !important;
+      backdrop-filter: blur(10px) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+      background: rgba(0, 191, 255, 0.2) !important;
+      border-color: var(--primary) !important;
+      color: var(--primary) !important;
+      transform: scale(1.05) !important;
+    }
+
+    .leaflet-control-zoom a:first-child {
+      border-top-left-radius: 8px !important;
+      border-top-right-radius: 8px !important;
+    }
+
+    .leaflet-control-zoom a:last-child {
+      border-bottom-left-radius: 8px !important;
+      border-bottom-right-radius: 8px !important;
+    }
+
+    /* Project Overview Section */
+    .project-overview {
+      padding: 4rem 0;
+      position: relative;
+      margin: 2rem 0;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .overview-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .overview-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(46, 213, 115, 0.3);
+    }
+
+    .overview-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--dark);
+      transition: all 0.4s ease;
+    }
+
+    .overview-card:hover .card-icon {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: 0 0 30px rgba(46, 213, 115, 0.5);
+    }
+
+    .overview-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: var(--light);
+      font-weight: 600;
+    }
+
+    .overview-card p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* Enhanced animations */
+    @keyframes forestGrow {
+      0% { transform: scale(0.8) rotate(-5deg); opacity: 0.7; }
+      50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+    }
+
+    @keyframes fireFlicker {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        filter: hue-rotate(0deg);
+      }
+      25% { 
+        transform: scale(1.05) rotate(1deg);
+        filter: hue-rotate(10deg);
+      }
+      75% { 
+        transform: scale(0.95) rotate(-1deg);
+        filter: hue-rotate(-10deg);
+      }
+    }
+
+    /* Team Section Enhancements */
+    .team-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 3rem 2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      margin: 2rem 0;
+      backdrop-filter: blur(10px);
+    }
+
+    .team-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(0, 191, 255, 0.3);
+    }
+
+    .team-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .team-img {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      position: relative;
+    }
+
+    .team-img img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--dark);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .social-icon {
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--light);
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-icon:hover {
+      background: var(--primary);
+      color: var(--dark);
+      transform: translateY(-2px);
+    }
+
+    .team-card h3 {
+      margin: 1rem 0 0.5rem;
+      color: var(--light);
+      font-size: 1.2rem;
+    }
+
+    .team-card p {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .skill-tags span {
+      background: rgba(0, 191, 255, 0.1);
+      color: var(--primary);
+      padding: 0.2rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(0, 191, 255, 0.2);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .status-indicators {
+        gap: 1rem;
+      }
+      
+      .status-item {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+      
+      .data-panels {
+        grid-template-columns: 1fr;
+        width: 95%;
+      }
+      
+      .btn-send {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+      }
+      
+      .team-section {
+        grid-template-columns: 1fr;
+        padding: 2rem 1rem;
+      }
+    }
+
+    /* Impact Section Styles - Horizontal Layout */
+    .impact-section {
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .impact-stat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact-stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--success));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .impact-stat:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 107, 53, 0.4);
+    }
+
+    .impact-stat:hover::before {
+      transform: scaleX(1);
+    }
+
+    .stat-icon {
+      width: 80px;
+      height: 80px;
+      min-width: 80px;
+      background: linear-gradient(135deg, var(--secondary), var(--warning));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--dark);
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .impact-stat:hover .stat-icon {
+      transform: scale(1.2) rotate(15deg);
+      box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+    }
+
+    .stat-number {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+    }
+
+    .stat-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-description {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    /* Floating background elements */
+    .impact-section::after {
+      content: '🌍🔥🌳📊';
+      position: absolute;
+      top: 20%;
+      left: -10%;
+      font-size: 8rem;
+      opacity: 0.03;
+      animation: float 15s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Additional animations for impact stats */
+    .impact-stat:nth-child(1) .stat-icon {
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .impact-stat:nth-child(2) .stat-icon {
+      animation: fireFlicker 2.5s ease-in-out infinite;
+    }
+
+    .impact-stat:nth-child(3) .stat-icon {
+      animation: forestGrow 4s ease-in-out infinite;
+    }
+
+    .impact-stat:nth-child(4) .stat-icon {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Container utility */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Enhanced responsive design for impact section */
+    @media (max-width: 768px) {
+      .impact-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        padding: 0 1rem;
+      }
+      
+      .impact-stat {
+        padding: 2rem 1.5rem;
+      }
+      
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      
+      .stat-number {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Professional Team Section - NASA Style */
+    .team-section-pro {
+      padding: 6rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .team-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(46, 213, 115, 0.1));
+      border: 1px solid rgba(0, 191, 255, 0.3);
+      border-radius: 25px;
+      padding: 0.8rem 1.5rem;
+      margin-top: 1rem;
+      backdrop-filter: blur(10px);
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .team-badge i {
+      color: var(--warning);
+      font-size: 1.2rem;
+    }
+
+    .team-grid-pro {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .team-card-pro {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.03) 0%, rgba(46, 213, 115, 0.03) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: -1;
+    }
+
+    .team-card-pro:hover .card-background {
+      opacity: 1;
+    }
+
+    .team-card-pro::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--success), var(--secondary));
+      transform: scaleX(0);
+      transition: transform 0.5s ease;
+    }
+
+    .team-card-pro:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(0, 191, 255, 0.2),
+        0 0 40px rgba(0, 191, 255, 0.1);
+      border-color: rgba(0, 191, 255, 0.3);
+    }
+
+    .team-card-pro:hover::before {
+      transform: scaleX(1);
+    }
+
+    .team-avatar {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .team-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), var(--success), var(--secondary)) border-box;
+      opacity: 0;
+      transition: all 0.4s ease;
+      animation: rotate 8s linear infinite;
+    }
+
+    .team-card-pro:hover .avatar-ring {
+      opacity: 1;
+      border: 2px solid var(--primary);
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background: var(--success);
+      border: 3px solid var(--dark);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .team-info h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .role {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .bio {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+
+    .expertise {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-pro {
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(46, 213, 115, 0.1));
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid rgba(0, 191, 255, 0.2);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .team-card-pro:hover .skill-pro {
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(46, 213, 115, 0.2));
+      border-color: rgba(0, 191, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .social-links-pro {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .social-pro {
+      width: 45px;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--light);
+      transition: all 0.4s ease;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-pro::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .social-pro:hover::before {
+      left: 100%;
+    }
+
+    .social-pro.github:hover {
+      background: #333;
+      border-color: #333;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .social-pro.linkedin:hover {
+      background: #0077b5;
+      border-color: #0077b5;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .social-pro.email:hover, .social-pro.leaf:hover, .social-pro.code:hover, 
+    .social-pro.chart:hover, .social-pro.design:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--dark);
+      transform: translateY(-3px);
+    }
+
+    /* NASA Tech Animations */
+    @keyframes dataStream {
+      0% { transform: translateX(-100%); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes satelliteOrbit {
+      0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
+    }
+
+    @keyframes techGlow {
+      0%, 100% { 
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        border-color: rgba(0, 212, 255, 0.3);
+      }
+      50% { 
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+        border-color: rgba(0, 212, 255, 0.6);
+      }
+    }
+
+    @keyframes hologramFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+      75% { opacity: 0.9; }
+    }
+
+    /* Enhanced team card animations */
+    .team-card-pro {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card-pro::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+      transition: left 0.8s ease;
+    }
+
+    .team-card-pro:hover::after {
+      left: 100%;
+    }
+
+    .team-card-pro:hover {
+      animation: techGlow 2s ease-in-out infinite;
+    }
+
+    .team-avatar::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--success), var(--primary));
+      -webkit-mask: radial-gradient(circle, transparent 60px, black 62px);
+      mask: radial-gradient(circle, transparent 60px, black 62px);
+      animation: rotate 4s linear infinite;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .team-card-pro:hover .team-avatar::before {
+      opacity: 1;
+    }
+
+    .role i {
+      animation: satelliteOrbit 8s linear infinite;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    /* Holographic effect for skills */
+    .skill-pro {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-pro::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .team-card-pro:hover .skill-pro::before {
+      left: 100%;
+    }
+
+    /* Data stream animation for footer */
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      animation: dataStream 3s ease-in-out infinite;
+    }
+
+    /* Responsive design for professional team section */
+    @media (max-width: 768px) {
+      .team-section-pro {
+        padding: 4rem 0;
+      }
+      
+      .team-grid-pro {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+      
+      .team-card-pro {
+        padding: 2.5rem 2rem;
+      }
+      
+      .team-avatar {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .team-info h3 {
+        font-size: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1><i class="fas fa-map-marker-alt"></i> Choisissez votre emplacement</h1>
-  <div id="map"></div>
-  <button class="btn-send" id="sendBtn">Envoyer la position</button>
+  <!-- 1. HERO SECTION - Project Introduction -->
+  <div class="header-container">
+    <h1 class="main-title">
+      <i class="fas fa-satellite-dish"></i> Get Forest Pulse <i class="fas fa-globe-americas"></i>
+    </h1>
+    <p class="subtitle">Interactive Visualization of Deforestation & Fire Dynamics in Cameroon</p>
+    
+    <!-- Status Indicators -->
+    <div class="status-indicators">
+      <div class="status-item">
+        <div class="status-icon active"></div>
+        <span>MODIS Terra Data</span>
+      </div>
+      <div class="status-item">
+        <div class="status-icon warning"></div>
+        <span>Forest Loss 2001-2022</span>
+      </div>
+      <div class="status-item">
+        <div class="status-icon danger"></div>
+        <span>Active Fire Hotspots</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PROJECT OVERVIEW SECTION -->
+  <div class="data-panels">
+    <div class="data-panel">
+      <div class="panel-icon">
+        <i class="fas fa-crosshairs"></i>
+      </div>
+      <h2 class="panel-title">Project Mission</h2>
+      <p class="panel-description">
+        Visualisation de la perte de couverture forestière au Cameroun 
+        de 2001 à 2022 via les images MODIS Terra True Color.
+      </p>
+    </div>
+    
+    <div class="data-panel">
+      <div class="panel-icon">
+        <i class="fas fa-fire"></i>
+      </div>
+      <h3 class="panel-title">Active Fire Hotspots</h3>
+      <p class="panel-description">
+        Détection des points chauds d'incendie année par année 
+        avec les données MODIS Active Fire pour analyser l'impact.
+      </p>
+    </div>
+    
+    <div class="data-panel">
+      <div class="panel-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <h3 class="panel-title">Combined Analysis</h3>
+      <p class="panel-description">
+        Animation combinée forêt + feux pour mettre en évidence 
+        les effets environnementaux globaux sur l'écosystème.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. INTERACTIVE MAP & TOOLS SECTION -->
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+
+  <!-- Enhanced Action Button -->
+  <button class="btn-send" id="sendBtn">
+    <i class="fas fa-satellite"></i> Envoyer la position
+  </button>
 
   <div id="loader"></div>
-  <video id="video" width="512" height="512" controls></video>
-  <div id="weather">Les conditions météorologiques s'afficheront ici après sélection.</div>
+  <video id="video" width="512" height="512" controls style="display: none; opacity: 0; transition: opacity 1s ease-in-out; margin: 1rem auto; border-radius: 10px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 6px 15px rgba(0,0,0,0.3);"></video>
+  <div id="weather" style="display: none; opacity: 0; transition: opacity 1s ease-in-out; width: 90%; max-width: 500px; margin: 1rem auto 3rem; padding: 1rem 1.5rem; background: rgba(255,255,255,0.1); border-radius: 12px; text-align: center; font-size: 1rem; line-height: 1.4; color: var(--light);">Les conditions météorologiques s'afficheront ici après sélection.</div>
 
-  <footer>&copy; <span id="year"></span> Map Selector. Tous droits réservés.</footer>
+  <!-- 4. ENVIRONMENTAL IMPACT & RESULTS SECTION -->
+  <section class="impact-section">
+    <div class="container">
+      <h2 class="section-title"><i class="fas fa-leaf"></i> Environmental Impact & Results</h2>
+      <div class="impact-grid">
+        <div class="impact-stat" data-aos="fade-right">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">21 Years</div>
+            <div class="stat-label">Forest Loss Tracking</div>
+            <div class="stat-description">Comprehensive analysis from 2001-2022 using MODIS Terra satellite data</div>
+          </div>
+        </div>
+        
+        <div class="impact-stat" data-aos="fade-left" data-aos-delay="100">
+          <div class="stat-icon">
+            <i class="fas fa-fire-alt"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">Real-Time</div>
+            <div class="stat-label">Fire Detection</div>
+            <div class="stat-description">Active fire hotspot monitoring with MODIS Active Fire detection system</div>
+          </div>
+        </div>
+        
+        <div class="impact-stat" data-aos="fade-right" data-aos-delay="200">
+          <div class="stat-icon">
+            <i class="fas fa-globe-africa"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">Cameroon</div>
+            <div class="stat-label">Focus Region</div>
+            <div class="stat-description">Central African ecosystem analysis with emphasis on biodiversity preservation</div>
+          </div>
+        </div>
+        
+        <div class="impact-stat" data-aos="fade-left" data-aos-delay="300">
+          <div class="stat-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">GIF/MP4</div>
+            <div class="stat-label">Visualizations</div>
+            <div class="stat-description">Animated environmental data ready for presentations and educational use</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. TEAM SECTION -->
+  <section class="team-section-pro">
+    <div class="container">
+      <div class="team-header">
+        <h2 class="section-title"><i class="fas fa-users-cog"></i> Meet Team GET</h2>
+        <p class="section-subtitle">The minds behind Get Forest Pulse - NASA Space Apps Challenge 2025</p>
+        <div class="team-badge">
+          <i class="fas fa-trophy"></i>
+          <span>NASA Space Apps Challenge 2025</span>
+        </div>
+      </div>
+      
+      <div class="team-grid-pro">
+        <div class="team-card-pro" data-aos="fade-up">
+          <div class="card-background"></div>
+          <div class="team-avatar">
+            <img src="https://ui-avatars.com/api/?name=Onana+Gregoire&background=0a1a2e&color=00d4ff&size=200&font-size=0.4" alt="Project Director">
+            <div class="avatar-ring"></div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="team-info">
+            <h3>Onana Gregoire</h3>
+            <p class="role"><i class="fas fa-rocket"></i> Project Director</p>
+            <p class="bio">Leading the Get Forest Pulse project for NASA Space Apps Challenge, coordinating team efforts and strategic vision.</p>
+            <div class="expertise">
+              <span class="skill-pro">Project Management</span>
+              <span class="skill-pro">NASA Challenge</span>
+              <span class="skill-pro">Team Leadership</span>
+            </div>
+            <div class="social-links-pro">
+              <a href="#" class="social-pro github"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-pro linkedin"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-pro email"><i class="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card-pro" data-aos="fade-up" data-aos-delay="120">
+          <div class="card-background"></div>
+          <div class="team-avatar">
+            <img src="https://ui-avatars.com/api/?name=Akana+Signig+Josias+Aaron&background=1a2e0a&color=00ff88&size=200&font-size=0.3" alt="Frontend Developer">
+            <div class="avatar-ring"></div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="team-info">
+            <h3>Akana Signig Josias Aaron</h3>
+            <p class="role"><i class="fas fa-code"></i> Frontend Developer</p>
+            <p class="bio">Creating interactive user interfaces and data visualizations for environmental monitoring applications.</p>
+            <div class="expertise">
+              <span class="skill-pro">JavaScript</span>
+              <span class="skill-pro">React</span>
+              <span class="skill-pro">UI Development</span>
+            </div>
+            <div class="social-links-pro">
+              <a href="#" class="social-pro github"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-pro linkedin"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-pro code"><i class="fas fa-code"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card-pro" data-aos="fade-up" data-aos-delay="240">
+          <div class="card-background"></div>
+          <div class="team-avatar">
+            <img src="https://ui-avatars.com/api/?name=KEUBOU+FOTSA&background=2e1a0a&color=ff6600&size=200&font-size=0.4" alt="Designer">
+            <div class="avatar-ring"></div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="team-info">
+            <h3>KEUBOU FOTSA</h3>
+            <p class="role"><i class="fas fa-palette"></i> Designer</p>
+            <p class="bio">Designing intuitive and engaging user experiences for complex environmental data visualization systems.</p>
+            <div class="expertise">
+              <span class="skill-pro">UI/UX Design</span>
+              <span class="skill-pro">Data Visualization</span>
+              <span class="skill-pro">Design Systems</span>
+            </div>
+            <div class="social-links-pro">
+              <a href="#" class="social-pro github"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-pro linkedin"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-pro design"><i class="fas fa-paint-brush"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card-pro" data-aos="fade-up" data-aos-delay="360">
+          <div class="card-background"></div>
+          <div class="team-avatar">
+            <img src="https://ui-avatars.com/api/?name=Lembou+Pharel&background=1a0a2e&color=aa00ff&size=200&font-size=0.4" alt="Backend Developer">
+            <div class="avatar-ring"></div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="team-info">
+            <h3>Lembou Pharel</h3>
+            <p class="role"><i class="fas fa-server"></i> Backend Developer</p>
+            <p class="bio">Developing robust server-side solutions and API integrations for NASA satellite data processing and analysis.</p>
+            <div class="expertise">
+              <span class="skill-pro">Python</span>
+              <span class="skill-pro">API Development</span>
+              <span class="skill-pro">Data Processing</span>
+            </div>
+            <div class="social-links-pro">
+              <a href="#" class="social-pro github"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-pro linkedin"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-pro code"><i class="fas fa-database"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card-pro" data-aos="fade-up" data-aos-delay="480">
+          <div class="card-background"></div>
+          <div class="team-avatar">
+            <img src="https://ui-avatars.com/api/?name=TSANGA+AWANA&background=2e2e0a&color=ffdd00&size=200&font-size=0.4" alt="Backend Developer">
+            <div class="avatar-ring"></div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="team-info">
+            <h3>TSANGA AWANA</h3>
+            <p class="role"><i class="fas fa-server"></i> Backend Developer</p>
+            <p class="bio">Specializing in backend architecture and NASA MODIS data integration for forest monitoring applications.</p>
+            <div class="expertise">
+              <span class="skill-pro">Node.js</span>
+              <span class="skill-pro">NASA APIs</span>
+              <span class="skill-pro">Cloud Services</span>
+            </div>
+            <div class="social-links-pro">
+              <a href="#" class="social-pro github"><i class="fab fa-github"></i></a>
+              <a href="#" class="social-pro linkedin"><i class="fab fa-linkedin"></i></a>
+              <a href="#" class="social-pro code"><i class="fas fa-cloud"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FOOTER SECTION -->
+  <footer style="position: relative;">
+    <p>&copy; <span id="year"></span> Get Forest Pulse <i class="fas fa-globe-americas"></i> - Team GET</p>
+    <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">
+      NASA Space Apps Challenge 2025 | Powered by MODIS Terra Satellite Data
+    </p>
+    <p style="font-size: 0.7rem; margin-top: 0.3rem; opacity: 0.6;">
+      Open-source project under MIT License | NASA Earthdata imagery publicly available
+    </p>
+  </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -158,11 +1518,31 @@
     const weatherEl = document.getElementById("weather");
     const loaderEl = document.getElementById("loader");
 
-    // Initialize map
-    const map = L.map('map').setView([0, 0], 2);
+    // Initialize map with zoom controls and limits (no world duplication)
+    const map = L.map('map', {
+      center: [0, 0],
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 18,
+      zoomControl: true,
+      worldCopyJump: false,
+      maxBoundsViscosity: 1.0
+    });
+    
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap contributors',
+      minZoom: 2,
+      maxZoom: 18,
+      noWrap: true
     }).addTo(map);
+
+    // Set strict bounds to prevent world duplication
+    const worldBounds = [
+      [-85, -180], // Southwest coordinates (slightly less than -90 to prevent issues)
+      [85, 180]    // Northeast coordinates (slightly less than 90 to prevent issues)
+    ];
+    map.setMaxBounds(worldBounds);
+    map.fitBounds(worldBounds);
 
     let selectedMarker = null;
     let selectedLatLng = null;
@@ -171,7 +1551,7 @@
       selectedLatLng = e.latlng;
       if (selectedMarker) map.removeLayer(selectedMarker);
       selectedMarker = L.marker(selectedLatLng).addTo(map)
-        .bindPopup(`Lat: ${selectedLatLng.lat.toFixed(5)}, Lng: ${selectedLatLng.lng.toFixed(5)}`)
+        .bindPopup(`Lat: ${selectedLatLng.lat.toFixed(5)}, Lng: ${selectedLatLng.lng.toFixed(5)}` )
         .openPopup();
 
       // Add bounce animation
@@ -233,7 +1613,7 @@
           Conditions: ${data.weather[0].description}<br>
           Humidité: ${data.main.humidity} %<br>
           Vent: ${data.wind.speed} m/s
-        `;
+        ` ;
         weatherEl.style.display = 'block';
         setTimeout(() => weatherEl.style.opacity = 1, 50); // fade in
 
@@ -245,6 +1625,75 @@
       } finally {
         loaderEl.style.display = 'none';
       }
+    });
+  </script>
+  
+  <!-- AOS Animation Library -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  
+  <!-- Initialize AOS and other animations after library loads -->
+  <script>
+    // Wait for DOM and AOS to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize AOS animations
+      if (typeof AOS !== 'undefined') {
+        AOS.init({
+          duration: 1000,
+          once: true,
+          easing: 'ease-out-cubic',
+          offset: 100
+        });
+      }
+
+      // Add dynamic counter animation for impact stats
+      function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+          const target = counter.textContent;
+          if (!isNaN(target)) {
+            let count = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+              count += increment;
+              if (count >= target) {
+                counter.textContent = target;
+                clearInterval(timer);
+              } else {
+                counter.textContent = Math.ceil(count);
+              }
+            }, 20);
+          }
+        });
+      }
+
+      // Trigger counter animation when impact section is visible
+      const impactSection = document.querySelector('.impact-section');
+      if (impactSection) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              animateCounters();
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        
+        observer.observe(impactSection);
+      }
+
+      // Add smooth scrolling for better UX
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
     });
   </script>
 </body>
