@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aire Qaulity Pulse - Visualize The World Air On a Click</title>
+  <title>Air Quality Pulse - Interactive World Air Quality Visualization</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Leaflet CSS -->
@@ -1206,29 +1206,467 @@
       animation: dataStream 3s ease-in-out infinite;
     }
 
-    /* Responsive design for professional team section */
-    @media (max-width: 768px) {
-      .team-section-pro {
-        padding: 4rem 0;
+    /* Enhanced Responsive Design */
+    
+    /* Large Desktop (1200px+) */
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1400px;
       }
       
       .team-grid-pro {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(5, 1fr);
         gap: 2rem;
+      }
+      
+      .impact-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      
+      .overview-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+    }
+
+    /* Desktop (992px - 1199px) */
+    @media (max-width: 1199px) and (min-width: 992px) {
+      .team-grid-pro {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.8rem;
+      }
+      
+      .team-card-pro {
+        padding: 2rem 1.8rem;
+      }
+    }
+
+    /* Tablet Landscape (768px - 991px) */
+    @media (max-width: 991px) and (min-width: 768px) {
+      .header-container {
+        padding: 3rem 1rem;
+      }
+      
+      .main-title {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .status-indicators {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+      }
+      
+      .status-item {
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+      }
+      
+      .data-panels {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+      }
+      
+      .team-grid-pro {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
         padding: 0 1rem;
       }
       
       .team-card-pro {
-        padding: 2.5rem 2rem;
+        padding: 1.8rem 1.5rem;
       }
       
       .team-avatar {
-        width: 120px;
-        height: 120px;
+        width: 90px;
+        height: 90px;
+      }
+      
+      .impact-stat {
+        padding: 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      .stat-icon {
+        min-width: 60px;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Tablet Portrait (576px - 767px) */
+    @media (max-width: 767px) and (min-width: 576px) {
+      .header-container {
+        padding: 2.5rem 1rem;
+      }
+      
+      .main-title {
+        font-size: 2rem;
+        line-height: 1.2;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .status-indicators {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      
+      .status-item {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+      }
+      
+      #map {
+        width: 95%;
+        height: 400px;
+        margin: 1.5rem auto;
+      }
+      
+      .btn-send {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+        margin: 1rem auto 2rem;
+      }
+      
+      .data-panels {
+        padding: 0 0.5rem;
+      }
+      
+      .data-panel {
+        padding: 1.5rem;
+      }
+      
+      .panel-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+      
+      .panel-title {
+        font-size: 1.2rem;
+      }
+      
+      .panel-description {
+        font-size: 0.85rem;
+      }
+      
+      .impact-section {
+        padding: 3rem 0;
+      }
+      
+      .impact-grid {
+        padding: 0 0.5rem;
+      }
+      
+      .impact-stat {
+        padding: 1.2rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+      }
+      
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        font-size: 1.2rem;
+      }
+      
+      .stat-number {
+        font-size: 1.3rem;
+      }
+      
+      .stat-label {
+        font-size: 1rem;
+      }
+      
+      .stat-description {
+        font-size: 0.8rem;
+      }
+      
+      .team-section-pro {
+        padding: 3rem 0;
+      }
+      
+      .team-grid-pro {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+      }
+      
+      .team-card-pro {
+        padding: 1.5rem 1rem;
+      }
+      
+      .team-avatar {
+        width: 80px;
+        height: 80px;
       }
       
       .team-info h3 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+      }
+      
+      .role {
+        font-size: 0.8rem;
+      }
+      
+      .bio {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+      }
+      
+      .skill-pro {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+      }
+      
+      .social-links-pro {
+        gap: 0.8rem;
+      }
+      
+      .social-pro {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Mobile (320px - 575px) */
+    @media (max-width: 575px) {
+      .header-container {
+        padding: 2rem 0.5rem;
+      }
+      
+      .main-title {
+        font-size: 1.6rem;
+        line-height: 1.3;
+        margin-bottom: 0.8rem;
+      }
+      
+      .subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        padding: 0 0.5rem;
+      }
+      
+      .status-indicators {
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 0 0.5rem;
+      }
+      
+      .status-item {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+        width: 100%;
+        max-width: 200px;
+      }
+      
+      .status-icon {
+        width: 8px;
+        height: 8px;
+      }
+      
+      #map {
+        width: 98%;
+        height: 300px;
+        margin: 1rem auto;
+      }
+      
+      .btn-send {
+        padding: 0.7rem 1rem;
+        font-size: 0.8rem;
+        margin: 0.8rem auto 1.5rem;
+        width: 90%;
+        max-width: 200px;
+      }
+      
+      .data-panels {
+        padding: 0 0.25rem;
+        gap: 1rem;
+      }
+      
+      .data-panel {
+        padding: 1rem;
+      }
+      
+      .panel-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .panel-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .panel-description {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+      
+      .impact-section {
+        padding: 2rem 0;
+      }
+      
+      .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        padding: 0 0.5rem;
+      }
+      
+      .impact-grid {
+        padding: 0 0.25rem;
+        gap: 1rem;
+      }
+      
+      .impact-stat {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.6rem;
+      }
+      
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 1rem;
+      }
+      
+      .stat-number {
+        font-size: 1.1rem;
+      }
+      
+      .stat-label {
+        font-size: 0.9rem;
+      }
+      
+      .stat-description {
+        font-size: 0.75rem;
+        line-height: 1.3;
+      }
+      
+      .team-section-pro {
+        padding: 2rem 0;
+      }
+      
+      .team-header {
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+      }
+      
+      .team-badge {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+      
+      .team-grid-pro {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.25rem;
+      }
+      
+      .team-card-pro {
+        padding: 1.2rem 0.8rem;
+      }
+      
+      .team-avatar {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1rem;
+      }
+      
+      .team-info h3 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .role {
+        font-size: 0.7rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .bio {
+        font-size: 0.75rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.3;
+      }
+      
+      .expertise {
+        gap: 0.3rem;
+        margin-bottom: 1rem;
+      }
+      
+      .skill-pro {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+      }
+      
+      .social-links-pro {
+        gap: 0.6rem;
+      }
+      
+      .social-pro {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+      }
+      
+      footer {
+        padding: 1.5rem 0.5rem;
+        text-align: center;
+      }
+      
+      footer p {
+        font-size: 0.7rem !important;
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    /* Extra Small Mobile (max 320px) */
+    @media (max-width: 320px) {
+      .main-title {
+        font-size: 1.4rem;
+      }
+      
+      .subtitle {
+        font-size: 0.75rem;
+      }
+      
+      .team-avatar {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .team-info h3 {
+        font-size: 0.9rem;
+      }
+      
+      .skill-pro {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.3rem;
       }
     }
   </style>
@@ -1238,23 +1676,23 @@
   <!-- 1. HERO SECTION - Project Introduction -->
   <div class="header-container">
     <h1 class="main-title">
-      <i class="fas fa-satellite-dish"></i> Aire Qaulity Pulse <i class="fas fa-globe-americas"></i>
+      <i class="fas fa-wind"></i> Air Quality Pulse <i class="fas fa-globe-americas"></i>
     </h1>
-    <p class="subtitle">Interactive Visualization of The World Air On a Click</p>
+    <p class="subtitle">Real-time Interactive Web Platform for Global Weather & Environmental Data</p>
     
     <!-- Status Indicators -->
     <div class="status-indicators">
       <div class="status-item">
         <div class="status-icon active"></div>
-        <span>MODIS Terra Data</span>
+        <span>Real-Time Air Data</span>
       </div>
       <div class="status-item">
         <div class="status-icon warning"></div>
-        <span>Forest Loss 2001-2022</span>
+        <span>Global Air Quality Index</span>
       </div>
       <div class="status-item">
         <div class="status-icon danger"></div>
-        <span>Active Fire Hotspots</span>
+        <span>Pollution Alerts</span>
       </div>
     </div>
   </div>
@@ -1267,30 +1705,30 @@
       </div>
       <h2 class="panel-title">Project Mission</h2>
       <p class="panel-description">
-        Visualisation of The World Air On a Click
-        de 2001 à 2022 via les images MODIS Terra True Color.
+        Air Quality Pulse is a real-time interactive web-based platform that provides users with 
+        real-time weather and environmental data for any location on Earth.
       </p>
     </div>
     
     <div class="data-panel">
       <div class="panel-icon">
-        <i class="fas fa-fire"></i>
+        <i class="fas fa-smog"></i>
       </div>
-      <h3 class="panel-title">Active Fire Hotspots</h3>
+      <h3 class="panel-title">Main Goal</h3>
       <p class="panel-description">
-        Détection des points chauds d'incendie année par année 
-        avec les données MODIS Active Fire pour analyser l'impact.
+        Increase awareness of air quality, climate, and environmental health 
+        through a simple and intuitive interface accessible to everyone.
       </p>
     </div>
     
     <div class="data-panel">
       <div class="panel-icon">
-        <i class="fas fa-chart-line"></i>
+        <i class="fas fa-map-marked-alt"></i>
       </div>
-      <h3 class="panel-title">Combined Analysis</h3>
+      <h3 class="panel-title">How It Works</h3>
       <p class="panel-description">
-        Animation combinée forêt + feux pour mettre en évidence 
-        les effets environnementaux globaux sur l'écosystème.
+        Users are presented with a world map built using Leaflet.js. By clicking on any location, 
+        the system captures the latitude and longitude coordinates of that point.
       </p>
     </div>
   </div>
@@ -1302,7 +1740,7 @@
 
   <!-- Enhanced Action Button -->
   <button class="btn-send" id="sendBtn">
-    <i class="fas fa-satellite"></i> Envoyer la position
+    <i class="fas fa-wind"></i> Analyze Air Quality
   </button>
 
   <div id="loader"></div>
@@ -1312,49 +1750,49 @@
   <!-- 4. ENVIRONMENTAL IMPACT & RESULTS SECTION -->
   <section class="impact-section">
     <div class="container">
-      <h2 class="section-title"><i class="fas fa-leaf"></i> Environmental Impact & Results</h2>
+      <h2 class="section-title"><i class="fas fa-wind"></i> Air Quality Impact & Results</h2>
       <div class="impact-grid">
         <div class="impact-stat" data-aos="fade-right">
           <div class="stat-icon">
             <i class="fas fa-calendar-alt"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">21 Years</div>
-            <div class="stat-label">Forest Loss Tracking</div>
-            <div class="stat-description">Comprehensive analysis from 2001-2022 using MODIS Terra satellite data</div>
+            <div class="stat-number">Real-Time</div>
+            <div class="stat-label">Weather Data</div>
+            <div class="stat-description">Live weather and environmental data for any location on Earth</div>
           </div>
         </div>
         
         <div class="impact-stat" data-aos="fade-left" data-aos-delay="100">
           <div class="stat-icon">
-            <i class="fas fa-fire-alt"></i>
+            <i class="fas fa-mouse-pointer"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">Real-Time</div>
-            <div class="stat-label">Fire Detection</div>
-            <div class="stat-description">Active fire hotspot monitoring with MODIS Active Fire detection system</div>
+            <div class="stat-number">One Click</div>
+            <div class="stat-label">Easy Access</div>
+            <div class="stat-description">Simple interface - just click anywhere on the map to get instant data</div>
           </div>
         </div>
         
         <div class="impact-stat" data-aos="fade-right" data-aos-delay="200">
           <div class="stat-icon">
-            <i class="fas fa-globe-africa"></i>
+            <i class="fas fa-globe"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">Cameroon</div>
-            <div class="stat-label">Focus Region</div>
-            <div class="stat-description">Central African ecosystem analysis with emphasis on biodiversity preservation</div>
+            <div class="stat-number">Global</div>
+            <div class="stat-label">Coverage</div>
+            <div class="stat-description">Access weather and environmental data for any location worldwide</div>
           </div>
         </div>
         
         <div class="impact-stat" data-aos="fade-left" data-aos-delay="300">
           <div class="stat-icon">
-            <i class="fas fa-video"></i>
+            <i class="fas fa-heart"></i>
           </div>
           <div class="stat-content">
-            <div class="stat-number">GIF/MP4</div>
-            <div class="stat-label">Visualizations</div>
-            <div class="stat-description">Animated environmental data ready for presentations and educational use</div>
+            <div class="stat-number">Health</div>
+            <div class="stat-label">Awareness</div>
+            <div class="stat-description">Promoting environmental health awareness through accessible data</div>
           </div>
         </div>
       </div>
@@ -1366,7 +1804,7 @@
     <div class="container">
       <div class="team-header">
         <h2 class="section-title"><i class="fas fa-users-cog"></i> Meet Team GET</h2>
-        <p class="section-subtitle">The minds behind Aire Qaulity Pulse - NASA Space Apps Challenge 2025</p>
+        <p class="section-subtitle">The minds behind Air Quality Pulse - NASA Space Apps Challenge 2025</p>
         <div class="team-badge">
           <i class="fas fa-trophy"></i>
           <span>NASA Space Apps Challenge 2025</span>
@@ -1384,7 +1822,7 @@
           <div class="team-info">
             <h3>Onana Gregoire</h3>
             <p class="role"><i class="fas fa-rocket"></i> Project Director</p>
-            <p class="bio">Leading the Aire Qaulity Pulse  project for NASA Space Apps Challenge, coordinating team efforts and strategic vision.</p>
+            <p class="bio">Leading the Air Quality Pulse project for NASA Space Apps Challenge, coordinating team efforts and strategic vision.</p>
             <div class="expertise">
               <span class="skill-pro">Project Management</span>
               <span class="skill-pro">NASA Challenge</span>
@@ -1408,7 +1846,7 @@
           <div class="team-info">
             <h3>Akana Signig Josias Aaron</h3>
             <p class="role"><i class="fas fa-code"></i> Frontend Developer</p>
-            <p class="bio">Creating interactive user interfaces and data visualizations for environmental monitoring applications.</p>
+            <p class="bio">Creating interactive user interfaces and real-time data visualizations for Air Quality Pulse platform.</p>
             <div class="expertise">
               <span class="skill-pro">JavaScript</span>
               <span class="skill-pro">React</span>
@@ -1432,7 +1870,7 @@
           <div class="team-info">
             <h3>KEUBOU FOTSA</h3>
             <p class="role"><i class="fas fa-palette"></i> Designer</p>
-            <p class="bio">Designing intuitive and engaging user experiences for complex environmental data visualization systems.</p>
+            <p class="bio">Designing intuitive and engaging user experiences for Air Quality Pulse's weather data visualization interface.</p>
             <div class="expertise">
               <span class="skill-pro">UI/UX Design</span>
               <span class="skill-pro">Data Visualization</span>
@@ -1456,7 +1894,7 @@
           <div class="team-info">
             <h3>Lembou Pharel</h3>
             <p class="role"><i class="fas fa-server"></i> Backend Developer</p>
-            <p class="bio">Developing robust server-side solutions and API integrations for NASA satellite data processing and analysis.</p>
+            <p class="bio">Developing robust server-side solutions and weather API integrations for Air Quality Pulse platform.</p>
             <div class="expertise">
               <span class="skill-pro">Python</span>
               <span class="skill-pro">API Development</span>
@@ -1480,10 +1918,10 @@
           <div class="team-info">
             <h3>TSANGA AWANA</h3>
             <p class="role"><i class="fas fa-server"></i> Backend Developer</p>
-            <p class="bio">Specializing in backend architecture and NASA MODIS data integration for forest monitoring applications.</p>
+            <p class="bio">Specializing in backend architecture and real-time weather data integration for Air Quality Pulse applications.</p>
             <div class="expertise">
               <span class="skill-pro">Node.js</span>
-              <span class="skill-pro">NASA APIs</span>
+              <span class="skill-pro">Weather APIs</span>
               <span class="skill-pro">Cloud Services</span>
             </div>
             <div class="social-links-pro">
@@ -1499,12 +1937,12 @@
 
   <!-- 6. FOOTER SECTION -->
   <footer style="position: relative;">
-    <p>&copy; <span id="year"></span> Aire Qaulity Pulse <i class="fas fa-globe-americas"></i> - Team GET</p>
+    <p>&copy; <span id="year"></span> Air Quality Pulse <i class="fas fa-globe-americas"></i> - Team GET</p>
     <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">
-      NASA Space Apps Challenge 2025 | Powered by MODIS Terra Satellite Data
+      NASA Space Apps Challenge 2025 | Powered by Real-Time Weather APIs
     </p>
     <p style="font-size: 0.7rem; margin-top: 0.3rem; opacity: 0.6;">
-      Open-source project under MIT License | NASA Earthdata imagery publicly available
+      Open-source project under MIT License | Real-time weather data publicly available
     </p>
   </footer>
 
